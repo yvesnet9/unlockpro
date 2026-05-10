@@ -2,237 +2,269 @@
 import { useState } from 'react'
 import Link from 'next/link'
 
-const BRANDS = [
-  { id: 'apple', label: 'Apple', icon: '🍎' },
-  { id: 'samsung', label: 'Samsung', icon: '📱' },
-  { id: 'huawei', label: 'Huawei', icon: '📲' },
-  { id: 'other', label: 'Autre', icon: '📡' },
+const COUNTRIES = [
+  { code: 'CI', flag: '🇨🇮', name: "Cote d'Ivoire", dial: '+225' },
+  { code: 'CM', flag: '🇨🇲', name: 'Cameroun', dial: '+237' },
+  { code: 'SN', flag: '🇸🇳', name: 'Senegal', dial: '+221' },
+  { code: 'CD', flag: '🇨🇩', name: 'Congo RDC', dial: '+243' },
+  { code: 'ML', flag: '🇲🇱', name: 'Mali', dial: '+223' },
+  { code: 'GN', flag: '🇬🇳', name: 'Guinee', dial: '+224' },
+  { code: 'BJ', flag: '🇧🇯', name: 'Benin', dial: '+229' },
+  { code: 'TG', flag: '🇹🇬', name: 'Togo', dial: '+228' },
 ]
 
-const CARRIERS = [
-  { id: 'sfr', label: 'SFR' },
-  { id: 'orange', label: 'Orange' },
-  { id: 'bouygues', label: 'Bouygues' },
-  { id: 'free', label: 'Free' },
-]
+const AMOUNTS = [5, 10, 15, 25, 50]
 
 const STATS = [
-  { value: '50 000+', label: 'téléphones débloqués' },
-  { value: '99.2 %', label: 'taux de succès' },
-  { value: '< 24h', label: 'délai moyen' },
-  { value: '4.9 / 5', label: 'avis clients' },
+  { value: '500K+', label: 'recharges envoyees' },
+  { value: '50+', label: 'pays couverts' },
+  { value: '< 10s', label: 'livraison moyenne' },
+  { value: '4.9/5', label: 'avis clients' },
 ]
 
-const STEPS = [
-  { n: '01', title: 'Entrez votre IMEI', desc: 'Composez *#06# pour obtenir votre IMEI à 15 chiffres.' },
-  { n: '02', title: 'Choisissez votre service', desc: 'Sélectionnez votre marque et votre opérateur actuel.' },
-  { n: '03', title: 'Payez en sécurité', desc: 'Paiement par carte ou PayPal via Stripe.' },
-  { n: '04', title: 'Recevez votre code', desc: 'Le code arrive par email sous 24h maximum.' },
+const TESTIMONIALS = [
+  { name: 'Aminata B.', country: 'France', flag: '🇫🇷', device: 'MTN Cote Ivoire', date: 'Il y a 2 jours', comment: 'Ma mere a recu la recharge en moins de 10 secondes. Service impeccable !', stars: 5 },
+  { name: 'Marc D.', country: 'Belgique', flag: '🇧🇪', device: 'Orange Cameroun', date: 'Il y a 3 jours', comment: 'Rapide, fiable et sans frais caches. J utilise UnlockPro chaque semaine.', stars: 5 },
+  { name: 'Fatou D.', country: 'Suisse', flag: '🇨🇭', device: 'Airtel Senegal', date: 'Il y a 5 jours', comment: 'Livraison instantanee comme promis. Mon frere a recu son credit immediatement.', stars: 5 },
+  { name: 'Fatou D.', country: 'Suisse', flag: '🇨🇭', device: 'Airtel Senegal', date: 'Il y a 5 jours', comment: 'Livraison instantanee comme promis. Mon frere a recu son credit immediatement.', stars: 5 },
 ]
 
 export default function HomePage() {
-  const [brand, setBrand] = useState('')
-  const [carrier, setCarrier] = useState('')
-  const [imei, setImei] = useState('')
+  const [activeTab, setActiveTab] = useState('recharge')
+  const [selectedCountry, setSelectedCountry] = useState('CI')
+  const [phone, setPhone] = useState('')
+  const [amount, setAmount] = useState(10)
+  const country = COUNTRIES.find(c => c.code === selectedCountry) || COUNTRIES[0]
 
   return (
-    <div style={{ fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif", background: '#0a0a0a', color: '#f0ede8', minHeight: '100vh' }}>
+    <div style={{ fontFamily: "'DM Sans','Helvetica Neue',sans-serif", background: '#0a0a0a', color: '#f0ede8', minHeight: '100vh' }}>
 
-      {/* Nav */}
-      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 48px', borderBottom: '1px solid #1e1e1e', position: 'sticky', top: 0, background: 'rgba(10,10,10,0.9)', backdropFilter: 'blur(12px)', zIndex: 100 }}>
-        <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-0.5px' }}>
-          Unlock<span style={{ color: '#a3ff6b' }}>Pro</span>
+      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 48px', borderBottom: '1px solid #1e1e1e', position: 'sticky', top: 0, background: 'rgba(10,10,10,0.95)', backdropFilter: 'blur(12px)', zIndex: 100 }}>
+        <div style={{ fontSize: '20px', fontWeight: 800 }}>Unlock<span style={{ color: '#059669' }}>Pro</span></div>
+        <div style={{ display: 'flex', gap: '28px', fontSize: '13px' }}>
+          <Link href="/order?type=recharge" style={{ color: '#059669', textDecoration: 'none', fontWeight: 700 }}>Recharges</Link>
+          <Link href="/order?type=giftcard" style={{ color: '#888', textDecoration: 'none' }}>Gift Cards</Link>
+          <Link href="/order?type=unlock" style={{ color: '#888', textDecoration: 'none' }}>Deblocage</Link>
+          <Link href="/dashboard" style={{ color: '#888', textDecoration: 'none' }}>Mon compte</Link>
         </div>
-        <div style={{ display: 'flex', gap: '32px', fontSize: '14px', color: '#888' }}>
-          <Link href="/comment-ca-marche" style={{ color: 'inherit', textDecoration: 'none' }}>Comment ça marche</Link>
-          <Link href="/services" style={{ color: 'inherit', textDecoration: 'none' }}>Services</Link>
-          <Link href="/blog" style={{ color: 'inherit', textDecoration: 'none' }}>Blog</Link>
-          <Link href="/faq" style={{ color: 'inherit', textDecoration: 'none' }}>FAQ</Link>
-          <Link href="/dashboard" style={{ color: 'inherit', textDecoration: 'none' }}>Mon compte</Link>
-        </div>
-        <Link href="/order" style={{ background: '#a3ff6b', color: '#0a0a0a', padding: '10px 22px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>
-          Débloquer maintenant
-        </Link>
+        <Link href="/order" style={{ background: '#059669', color: '#0a0a0a', padding: '10px 22px', borderRadius: '8px', fontSize: '13px', fontWeight: 800, textDecoration: 'none' }}>Commander</Link>
       </nav>
 
-      {/* Hero */}
-      <section style={{ maxWidth: '1100px', margin: '0 auto', padding: '100px 48px 80px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}>
+      <div style={{ background: '#111', borderBottom: '1px solid #1a1a1a', padding: '8px 48px', textAlign: 'center' }}>
+        <div style={{ display: 'flex', gap: '24px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          {['500 000+ recharges envoyees', 'Paiement securise Stripe', 'Livraison instantanee', 'Support 7j/7'].map(t => (
+            <span key={t} style={{ fontSize: '12px', color: '#555' }}><span style={{ color: '#059669' }}>✓</span> {t}</span>
+          ))}
+        </div>
+      </div>
+
+      <section style={{ maxWidth: '1100px', margin: '0 auto', padding: '80px 48px 60px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}>
         <div>
-          <div style={{ display: 'inline-block', background: '#1a2e0f', color: '#a3ff6b', fontSize: '12px', fontWeight: 600, padding: '6px 14px', borderRadius: '20px', marginBottom: '24px', letterSpacing: '0.04em' }}>
-            
-             ✓ SERVICE OFFICIEL — LÉGAL EN EUROPE & AFRIQUE
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#1a2e0f', border: '1px solid #3a5a1a', borderRadius: '20px', padding: '6px 14px', marginBottom: '20px' }}>
+            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#059669', display: 'inline-block' }}></span>
+            <span style={{ fontSize: '12px', color: '#059669', fontWeight: 600 }}>Service disponible maintenant</span>
           </div>
-          <h1 style={{ fontSize: 'clamp(36px, 5vw, 58px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-2px', margin: '0 0 24px' }}>
-            Débloquez votre<br />téléphone en<br /><span style={{ color: '#a3ff6b' }}>moins de 24h.</span>
+          <h1 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-2px', margin: '0 0 20px' }}>
+            Rechargez le telephone<br />de vos proches<br /><span style={{ color: '#059669' }}>en Afrique.</span>
           </h1>
-          <p style={{ fontSize: '17px', color: '#888', lineHeight: 1.7, margin: '0 0 40px', maxWidth: '420px' }}>
-            Compatible tous opérateurs français. Code officiel garanti, remboursement si échec.
+          <p style={{ fontSize: '16px', color: '#666', lineHeight: 1.7, margin: '0 0 28px', maxWidth: '400px' }}>
+            MTN, Orange, Airtel, Moov et 50+ operateurs. Livraison instantanee. Zero frais cache.
           </p>
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            <Link href="/order" style={{ background: '#a3ff6b', color: '#0a0a0a', padding: '16px 32px', borderRadius: '10px', fontSize: '15px', fontWeight: 700, textDecoration: 'none' }}>
-              Commencer →
-            </Link>
-            <Link href="/comment-ca-marche" style={{ background: 'transparent', color: '#f0ede8', padding: '16px 32px', borderRadius: '10px', fontSize: '15px', fontWeight: 600, textDecoration: 'none', border: '1px solid #2a2a2a' }}>
-              Comment ça marche
-            </Link>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '24px' }}>
+            {COUNTRIES.map(c => (
+              <button key={c.code} onClick={() => setSelectedCountry(c.code)}
+                style={{ padding: '6px 10px', borderRadius: '8px', border: `1px solid ${selectedCountry === c.code ? '#059669' : '#2a2a2a'}`, background: selectedCountry === c.code ? '#1a2e0f' : 'transparent', color: selectedCountry === c.code ? '#059669' : '#555', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>
+                {c.flag} {c.code}
+              </button>
+            ))}
+            <span style={{ fontSize: '12px', color: '#444', alignSelf: 'center' }}>+42 pays</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <span style={{ fontSize: '12px', color: '#444' }}>✓ Livraison instantanee sur le telephone du destinataire</span>
+            <span style={{ fontSize: '12px', color: '#444' }}>✓ Rembourse si echec · Paiement 100% securise</span>
           </div>
         </div>
 
-        {/* Widget de commande rapide */}
-        <div style={{ background: '#111', border: '1px solid #222', borderRadius: '16px', padding: '32px' }}>
-          <p style={{ margin: '0 0 20px', fontSize: '13px', color: '#666', fontWeight: 600, letterSpacing: '0.04em' }}>COMMANDE RAPIDE</p>
+        <div style={{ background: '#111', border: '1px solid #222', borderRadius: '16px', padding: '28px' }}>
+          <div style={{ display: 'flex', gap: '4px', background: '#1a1a1a', borderRadius: '10px', padding: '4px', marginBottom: '20px' }}>
+            {[['recharge','Recharge'],['giftcard','Gift Card'],['unlock','Deblocage']].map(([key, label]) => (
+              <button key={key} onClick={() => setActiveTab(key)}
+                style={{ flex: 1, padding: '9px', fontSize: '12px', border: 'none', borderRadius: '7px', cursor: 'pointer', fontWeight: 700, background: activeTab === key ? '#059669' : 'transparent', color: activeTab === key ? '#0a0a0a' : '#555' }}>
+                {label}
+              </button>
+            ))}
+          </div>
 
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '8px' }}>Marque</label>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
-              {BRANDS.map(b => (
-                <button key={b.id} onClick={() => setBrand(b.id)}
-                  style={{ padding: '10px 6px', borderRadius: '8px', border: `1px solid ${brand === b.id ? '#a3ff6b' : '#222'}`, background: brand === b.id ? '#1a2e0f' : 'transparent', color: brand === b.id ? '#a3ff6b' : '#888', fontSize: '12px', cursor: 'pointer', textAlign: 'center' }}>
-                  <div>{b.icon}</div>
-                  <div style={{ marginTop: '4px' }}>{b.label}</div>
-                </button>
-              ))}
+          {activeTab === 'recharge' && (
+            <>
+              <div style={{ marginBottom: '14px' }}>
+                <label style={{ fontSize: '11px', color: '#555', display: 'block', marginBottom: '8px', fontWeight: 600 }}>PAYS DESTINATION</label>
+                <select value={selectedCountry} onChange={e => setSelectedCountry(e.target.value)}
+                  style={{ width: '100%', background: '#0a0a0a', border: '1px solid #2a2a2a', borderRadius: '8px', padding: '11px 12px', color: '#f0ede8', fontSize: '13px', outline: 'none' }}>
+                  {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.flag} {c.name}</option>)}
+                </select>
+              </div>
+              <div style={{ marginBottom: '14px' }}>
+                <label style={{ fontSize: '11px', color: '#555', display: 'block', marginBottom: '8px', fontWeight: 600 }}>NUMERO DU DESTINATAIRE</label>
+                <input type="tel" placeholder={country ? country.dial + ' XX XX XX XX' : '+XX'} value={phone} onChange={e => setPhone(e.target.value)}
+                  style={{ width: '100%', background: '#0a0a0a', border: `1px solid ${phone.length > 8 ? '#059669' : '#2a2a2a'}`, borderRadius: '8px', padding: '11px 12px', color: '#f0ede8', fontSize: '14px', outline: 'none', boxSizing: 'border-box', fontFamily: 'monospace' }} />
+              </div>
+              <div style={{ marginBottom: '18px' }}>
+                <label style={{ fontSize: '11px', color: '#555', display: 'block', marginBottom: '8px', fontWeight: 600 }}>MONTANT</label>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  {AMOUNTS.map(a => (
+                    <button key={a} onClick={() => setAmount(a)}
+                      style={{ flex: 1, padding: '10px 6px', borderRadius: '8px', border: `1px solid ${amount === a ? '#059669' : '#2a2a2a'}`, background: amount === a ? '#1a2e0f' : 'transparent', color: amount === a ? '#059669' : '#555', fontSize: '13px', cursor: 'pointer', fontWeight: 700 }}>
+                      {a} €
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <Link href={`/order?type=recharge&country=${selectedCountry}&phone=${phone}&amount=${amount}`}
+                style={{ display: 'block', background: '#059669', color: '#0a0a0a', padding: '14px', borderRadius: '10px', textAlign: 'center', fontWeight: 800, fontSize: '15px', textDecoration: 'none' }}>
+                Envoyer la recharge →
+              </Link>
+            </>
+          )}
+          {activeTab === 'giftcard' && (
+            <div style={{ textAlign: 'center', padding: '20px 0' }}>
+              <div style={{ fontSize: '32px', marginBottom: '12px' }}>🎁</div>
+              <p style={{ color: '#666', fontSize: '14px', marginBottom: '16px' }}>Amazon, iTunes, Google Play et plus</p>
+              <Link href="/order?type=giftcard" style={{ display: 'block', background: '#059669', color: '#0a0a0a', padding: '14px', borderRadius: '10px', textAlign: 'center', fontWeight: 800, fontSize: '14px', textDecoration: 'none' }}>Voir les Gift Cards →</Link>
             </div>
-          </div>
-
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '8px' }}>Opérateur actuel</label>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
-              {CARRIERS.map(c => (
-                <button key={c.id} onClick={() => setCarrier(c.id)}
-                  style={{ padding: '10px 6px', borderRadius: '8px', border: `1px solid ${carrier === c.id ? '#a3ff6b' : '#222'}`, background: carrier === c.id ? '#1a2e0f' : 'transparent', color: carrier === c.id ? '#a3ff6b' : '#888', fontSize: '12px', cursor: 'pointer', textAlign: 'center' }}>
-                  {c.label}
-                </button>
-              ))}
+          )}
+          {activeTab === 'unlock' && (
+            <div style={{ textAlign: 'center', padding: '20px 0' }}>
+              <div style={{ fontSize: '32px', marginBottom: '12px' }}>🔓</div>
+              <p style={{ color: '#666', fontSize: '14px', marginBottom: '16px' }}>Deblocage officiel toutes marques en 24h</p>
+              <Link href="/order?type=unlock" style={{ display: 'block', background: '#059669', color: '#0a0a0a', padding: '14px', borderRadius: '10px', textAlign: 'center', fontWeight: 800, fontSize: '14px', textDecoration: 'none' }}>Debloquer mon telephone →</Link>
             </div>
+          )}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '12px' }}>
+            {['🔒 Stripe SSL', '⚡ Instantane', '↩ Rembourse si echec'].map(t => (
+              <span key={t} style={{ fontSize: '11px', color: '#444' }}>{t}</span>
+            ))}
           </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '8px' }}>IMEI (15 chiffres)</label>
-            <input
-              type="text"
-              placeholder="Ex : 356938035643809"
-              maxLength={15}
-              value={imei}
-              onChange={e => setImei(e.target.value.replace(/\D/g, ''))}
-              style={{ width: '100%', background: '#0a0a0a', border: '1px solid #222', borderRadius: '8px', padding: '12px 14px', color: '#f0ede8', fontSize: '15px', outline: 'none', boxSizing: 'border-box', fontFamily: 'monospace' }}
-            />
-            <p style={{ fontSize: '11px', color: '#555', margin: '6px 0 0' }}>Composez *#06# sur votre téléphone</p>
-          </div>
-
-          <Link
-            href={brand && carrier && imei.length === 15 ? `/order?brand=${brand}&carrier=${carrier}&imei=${imei}` : '#'}
-            style={{ display: 'block', background: brand && carrier && imei.length === 15 ? '#a3ff6b' : '#1e1e1e', color: brand && carrier && imei.length === 15 ? '#0a0a0a' : '#444', padding: '14px', borderRadius: '10px', textAlign: 'center', fontWeight: 700, fontSize: '14px', textDecoration: 'none', transition: 'all 0.2s', cursor: brand && carrier && imei.length === 15 ? 'pointer' : 'default' }}>
-            Voir le prix et commander →
-          </Link>
         </div>
       </section>
 
-      {/* Stats */}
-      <section style={{ background: '#0d0d0d', borderTop: '1px solid #1a1a1a', borderBottom: '1px solid #1a1a1a', padding: '48px' }}>
+      <section style={{ background: '#0d0d0d', borderTop: '1px solid #1a1a1a', borderBottom: '1px solid #1a1a1a', padding: '40px 48px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '32px', textAlign: 'center' }}>
           {STATS.map(s => (
             <div key={s.label}>
-              <div style={{ fontSize: '32px', fontWeight: 800, letterSpacing: '-1px', color: '#a3ff6b' }}>{s.value}</div>
-              <div style={{ fontSize: '13px', color: '#666', marginTop: '6px' }}>{s.label}</div>
+              <div style={{ fontSize: '32px', fontWeight: 800, color: '#059669' }}>{s.value}</div>
+              <div style={{ fontSize: '13px', color: '#555', marginTop: '6px' }}>{s.label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Comment ça marche */}
-      <section id="how" style={{ maxWidth: '1100px', margin: '0 auto', padding: '100px 48px' }}>
-        <p style={{ fontSize: '12px', color: '#666', fontWeight: 600, letterSpacing: '0.08em', marginBottom: '16px' }}>PROCESSUS</p>
-        <h2 style={{ fontSize: '40px', fontWeight: 800, letterSpacing: '-1.5px', margin: '0 0 64px' }}>Simple. Rapide. Garanti.</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
-          {STEPS.map(step => (
-            <div key={step.n} style={{ borderTop: '2px solid #a3ff6b', paddingTop: '24px' }}>
-              <div style={{ fontSize: '13px', color: '#a3ff6b', fontWeight: 700, marginBottom: '12px' }}>{step.n}</div>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, margin: '0 0 10px' }}>{step.title}</h3>
-              <p style={{ fontSize: '14px', color: '#666', lineHeight: 1.6, margin: 0 }}>{step.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Services / prix */}
-      <section id="services" style={{ background: '#0d0d0d', borderTop: '1px solid #1a1a1a', padding: '100px 48px' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <p style={{ fontSize: '12px', color: '#666', fontWeight: 600, letterSpacing: '0.08em', marginBottom: '16px' }}>TARIFS</p>
-          <h2 style={{ fontSize: '40px', fontWeight: 800, letterSpacing: '-1.5px', margin: '0 0 48px' }}>Tarifs transparents,<br />sans surprise.</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
-            {[
-              { name: 'iPhone — SFR / Orange / Bouygues', price: '24,99 €', eta: '24–48h', hot: true },
-              { name: 'Samsung Galaxy — France', price: '17,99 €', eta: '12–24h', hot: false },
-              { name: 'Huawei — France', price: '12,99 €', eta: '48–72h', hot: false },
-              { name: 'Autres marques', price: '11,99 €', eta: '48–72h', hot: false },
-              { name: 'Service B2B (10+ commandes)', price: 'Sur devis', eta: 'Prioritaire', hot: false },
-              { name: 'iCloud removal', price: 'Bientôt', eta: '—', hot: false },
-            ].map(s => (
-              <div key={s.name} style={{ background: s.hot ? '#111b0a' : '#111', border: `1px solid ${s.hot ? '#3a5a1a' : '#1e1e1e'}`, borderRadius: '12px', padding: '24px', position: 'relative' }}>
-                {s.hot && <div style={{ position: 'absolute', top: '16px', right: '16px', background: '#a3ff6b', color: '#0a0a0a', fontSize: '10px', fontWeight: 700, padding: '3px 8px', borderRadius: '20px' }}>POPULAIRE</div>}
-                <div style={{ fontSize: '14px', color: '#aaa', marginBottom: '16px', lineHeight: 1.4 }}>{s.name}</div>
-                <div style={{ fontSize: '26px', fontWeight: 800, letterSpacing: '-0.5px', marginBottom: '8px' }}>{s.price}</div>
-                <div style={{ fontSize: '12px', color: '#555' }}>Délai : {s.eta}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Garanties */}
-      <section style={{ maxWidth: '1100px', margin: '0 auto', padding: '100px 48px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '32px' }}>
+      <section style={{ maxWidth: '1100px', margin: '0 auto', padding: '80px 48px' }}>
+        <p style={{ fontSize: '12px', color: '#555', fontWeight: 600, letterSpacing: '0.08em', marginBottom: '12px' }}>NOS SERVICES</p>
+        <h2 style={{ fontSize: '36px', fontWeight: 800, letterSpacing: '-1px', margin: '0 0 48px' }}>Tout ce dont vous avez besoin.</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
           {[
-            { title: 'Remboursement garanti', desc: 'Si le code ne fonctionne pas, on vous rembourse intégralement. Sans question.' },
-            { title: 'Paiement 100% sécurisé', desc: 'Stripe PCI-DSS niveau 1. Aucune donnée bancaire stockée sur nos serveurs.' },
-            { title: 'Support 7j/7', desc: 'Une question ? Notre équipe répond en moins de 2h par email ou chat.' },
-          ].map(g => (
-            <div key={g.title} style={{ borderLeft: '3px solid #a3ff6b', paddingLeft: '24px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, margin: '0 0 10px' }}>{g.title}</h3>
-              <p style={{ fontSize: '14px', color: '#666', lineHeight: 1.7, margin: 0 }}>{g.desc}</p>
-            </div>
+            { title: 'Recharge mobile', desc: 'MTN, Orange, Airtel, Moov, Vodacom...', price: '5 € – 50 €', hot: true, icon: '📱', href: '/order?type=recharge' },
+            { title: 'Gift Cards', desc: 'Amazon, iTunes, Google Play, Netflix...', price: '10 € – 100 €', hot: false, icon: '🎁', href: '/order?type=giftcard' },
+            { title: 'Deblocage telephone', desc: 'iPhone, Samsung, Huawei — Code officiel', price: 'des 12,99 €', hot: false, icon: '🔓', href: '/order?type=unlock' },
+          ].map(s => (
+            <Link key={s.title} href={s.href} style={{ textDecoration: 'none' }}>
+              <div style={{ background: s.hot ? '#111b0a' : '#111', border: `1px solid ${s.hot ? '#3a5a1a' : '#1e1e1e'}`, borderRadius: '12px', padding: '28px', cursor: 'pointer' }}>
+                {s.hot && <div style={{ background: '#059669', color: '#0a0a0a', fontSize: '10px', fontWeight: 700, padding: '3px 10px', borderRadius: '20px', display: 'inline-block', marginBottom: '12px' }}>POPULAIRE</div>}
+                <div style={{ fontSize: '28px', marginBottom: '12px' }}>{s.icon}</div>
+                <div style={{ fontSize: '16px', fontWeight: 700, color: '#f0ede8', marginBottom: '8px' }}>{s.title}</div>
+                <div style={{ fontSize: '13px', color: '#555', marginBottom: '16px', lineHeight: 1.5 }}>{s.desc}</div>
+                <div style={{ fontSize: '22px', fontWeight: 800, color: '#059669' }}>{s.price}</div>
+              </div>
+            </Link>
           ))}
         </div>
       </section>
 
-      {/* Temoignages */}
-      <section style={{padding:'80px 48px',background:'#050505'}}>
-        <div style={{maxWidth:'1100px',margin:'0 auto'}}>
-          <h2 style={{fontSize:'36px',fontWeight:800,margin:'0 0 48px',textAlign:'center'}}>Ce que disent nos clients</h2>
-          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:'24px'}}>
-            {[{name:'Thomas M.',country:'🇫🇷 France',text:'iPhone SFR débloqué en 24h. Code reçu par email, fonctionne parfaitement. Service impeccable !',stars:5},{name:'Sarah K.',country:'🇨🇭 Suisse',text:'Swisscom débloqué rapidement. Prix correct et service client réactif. Je recommande.',stars:5},{name:'Marc D.',country:'🇧🇪 Belgique',text:'Samsung Galaxy Proximus débloqué en moins de 12h. Très satisfait du service !',stars:5}].map((t,i) => (
-              <div key={i} style={{background:'#111',border:'1px solid #1e1e1e',borderRadius:'16px',padding:'28px'}}>
-                <div style={{color:'#a3ff6b',fontSize:'18px',marginBottom:'16px'}}>{"★".repeat(t.stars)}</div>
-                <p style={{color:'#888',lineHeight:1.8,marginBottom:'20px'}}>{t.text}</p>
-                <div style={{fontWeight:700,fontSize:'14px'}}>{t.name}</div>
-                <div style={{color:'#444',fontSize:'12px',marginTop:'4px'}}>{t.country}</div>
+      <section style={{ background: '#0d0d0d', borderTop: '1px solid #1a1a1a', padding: '80px 48px' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <p style={{ fontSize: '12px', color: '#555', fontWeight: 600, letterSpacing: '0.08em', marginBottom: '12px' }}>PROCESSUS</p>
+          <h2 style={{ fontSize: '36px', fontWeight: 800, letterSpacing: '-1px', margin: '0 0 48px' }}>Simple. Rapide. Instantane.</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+            {[
+              { n: '01', title: 'Choisissez le pays', desc: 'Selectionnez le pays et operateur du destinataire.' },
+              { n: '02', title: 'Entrez le numero', desc: 'Le numero de telephone de votre proche en Afrique.' },
+              { n: '03', title: 'Payez en securite', desc: 'Paiement par carte ou PayPal via Stripe.' },
+              { n: '04', title: 'Livraison instantanee', desc: 'Le credit arrive en moins de 10 secondes.' },
+            ].map(step => (
+              <div key={step.n} style={{ borderTop: '2px solid #059669', paddingTop: '20px' }}>
+                <div style={{ fontSize: '13px', color: '#059669', fontWeight: 700, marginBottom: '10px' }}>{step.n}</div>
+                <h3 style={{ fontSize: '15px', fontWeight: 700, margin: '0 0 8px', color: '#f0ede8' }}>{step.title}</h3>
+                <p style={{ fontSize: '13px', color: '#555', lineHeight: 1.6, margin: 0 }}>{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer style={{ borderTop: '1px solid #1a1a1a', padding: '48px', textAlign: 'center' }}>
-        <div style={{ fontSize: '18px', fontWeight: 700, marginBottom: '24px' }}>
-          Unlock<span style={{ color: '#a3ff6b' }}>Pro</span>
+      <section style={{ padding: '80px 48px' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '16px', background: '#111', border: '1px solid #1e1e1e', borderRadius: '16px', padding: '14px 28px', marginBottom: '20px' }}>
+              <div>
+                <div style={{ fontSize: '36px', fontWeight: 800, color: '#059669', lineHeight: 1 }}>4.9</div>
+                <div style={{ color: '#059669', fontSize: '16px' }}>★★★★★</div>
+              </div>
+              <div style={{ borderLeft: '1px solid #222', paddingLeft: '16px', textAlign: 'left' }}>
+                <div style={{ fontSize: '14px', fontWeight: 700 }}>Excellent</div>
+                <div style={{ fontSize: '12px', color: '#555' }}>Base sur 500K+ recharges</div>
+                <div style={{ fontSize: '12px', color: '#555', marginTop: '2px' }}>✓ Avis verifies</div>
+              </div>
+            </div>
+            <h2 style={{ fontSize: '32px', fontWeight: 800, margin: 0 }}>Ce que disent nos clients</h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: '14px', padding: '24px', position: 'relative' }}>
+                <div style={{ position: 'absolute', top: '14px', right: '14px', fontSize: '10px', color: '#059669', background: '#1a2e0f', padding: '3px 8px', borderRadius: '20px', fontWeight: 600 }}>✓ Verifie</div>
+                <div style={{ color: '#059669', fontSize: '16px', marginBottom: '12px' }}>{'★'.repeat(t.stars)}</div>
+                <p style={{ color: '#888', lineHeight: 1.7, marginBottom: '18px', fontSize: '13px' }}>"{t.comment}"</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#1a2e0f', border: '1px solid #3a5a1a', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 700, color: '#059669', flexShrink: 0 }}>
+                    {t.name.slice(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: '13px' }}>{t.name} {t.flag}</div>
+                    <div style={{ color: '#444', fontSize: '11px' }}>{t.country} · {t.device}</div>
+                  </div>
+                  <div style={{ marginLeft: 'auto', fontSize: '11px', color: '#333' }}>{t.date}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div style={{ fontSize: '13px', color: '#444', display: 'flex', gap: '24px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href="/comment-ca-marche" style={{ color: 'inherit', textDecoration: 'none' }}>Comment ça marche</Link>
-          <Link href="/services" style={{ color: 'inherit', textDecoration: 'none' }}>Services</Link>
-          <Link href="/blog" style={{ color: 'inherit', textDecoration: 'none' }}>Blog</Link>
-          <Link href="/faq" style={{ color: 'inherit', textDecoration: 'none' }}>FAQ</Link>
-          <Link href="/mentions-legales" style={{ color: 'inherit', textDecoration: 'none' }}>Mentions légales</Link>
-          <Link href="/cgv" style={{ color: 'inherit', textDecoration: 'none' }}>CGV</Link>
-          <Link href="/confidentialite" style={{ color: 'inherit', textDecoration: 'none' }}>Confidentialité</Link>
-          <Link href="/suivi" style={{ color: 'inherit', textDecoration: 'none' }}>Suivi commande</Link>
-          <Link href="/support" style={{ color: 'inherit', textDecoration: 'none' }}>Support</Link>
+      </section>
+
+      <section style={{ background: '#0d0d0d', borderTop: '1px solid #1a1a1a', padding: '60px 48px' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
+          {[
+            { title: 'Remboursement garanti', desc: 'Si la recharge ne parvient pas, on vous rembourse integralement. Sans question.' },
+            { title: 'Paiement 100% securise', desc: 'Stripe PCI-DSS niveau 1. Aucune donnee bancaire stockee sur nos serveurs.' },
+            { title: 'Support 7j/7', desc: 'Notre equipe repond en moins de 2h par email ou WhatsApp.' },
+          ].map(g => (
+            <div key={g.title} style={{ borderLeft: '3px solid #059669', paddingLeft: '20px' }}>
+              <h3 style={{ fontSize: '15px', fontWeight: 700, margin: '0 0 8px', color: '#f0ede8' }}>{g.title}</h3>
+              <p style={{ fontSize: '13px', color: '#555', lineHeight: 1.7, margin: 0 }}>{g.desc}</p>
+            </div>
+          ))}
         </div>
-        <p style={{ fontSize: '12px', color: '#333', marginTop: '24px' }}>
-          © {new Date().getFullYear()} UnlockPro. Le déblocage de téléphone est légal en France et dans l'UE.
-        </p>
+      </section>
+
+      <footer style={{ borderTop: '1px solid #1a1a1a', padding: '40px 48px', textAlign: 'center' }}>
+        <div style={{ fontSize: '18px', fontWeight: 800, marginBottom: '20px' }}>Unlock<span style={{ color: '#059669' }}>Pro</span></div>
+        <div style={{ fontSize: '13px', color: '#444', display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '20px' }}>
+          {[['Recharges','/order?type=recharge'],['Gift Cards','/order?type=giftcard'],['Deblocage','/order?type=unlock'],['FAQ','/faq'],['Mentions legales','/mentions-legales'],['CGV','/cgv'],['Support','/support']].map(([label, href]) => (
+            <Link key={label} href={href} style={{ color: 'inherit', textDecoration: 'none' }}>{label}</Link>
+          ))}
+        </div>
+        <p style={{ fontSize: '12px', color: '#333' }}>© {new Date().getFullYear()} UnlockPro — Paiement securise · Livraison instantanee · Support 7j/7</p>
       </footer>
+
     </div>
   )
 }
