@@ -120,7 +120,7 @@ export default function HomePage() {
                   ))}
                 </div>
               </div>
-              <Link href={`/order?type=recharge&country=${selectedCountry}&phone=${phone}&amount=${amount}`}
+              <Link href={`/order/recharge?country=${selectedCountry}&phone=${phone}&amount=${amount}`}
                 style={{ display: 'block', background: '#059669', color: '#0a0a0a', padding: '14px', borderRadius: '10px', textAlign: 'center', fontWeight: 800, fontSize: '15px', textDecoration: 'none' }}>
                 Envoyér la recharge →
               </Link>
@@ -164,7 +164,7 @@ export default function HomePage() {
         <h2 style={{ fontSize: '36px', fontWeight: 800, letterSpacing: '-1px', margin: '0 0 48px' }}>Tout ce dont vous avez besoin.</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
           {[
-            { title: 'Recharge mobile', desc: 'MTN, Orange, Airtel, Moov, Vodacom...', price: '5 € – 50 €', hot: true, icon: '📱', href: '/order?type=recharge' },
+            { title: 'Recharge mobile', desc: 'MTN, Orange, Airtel, Moov, Vodacom...', price: '5 € – 50 €', hot: true, icon: '📱', href: '/order/recharge' },
             { title: 'Gift Cards', desc: 'Amazon, iTunes, Google Play, Netflix...', price: '10 € – 100 €', hot: false, icon: '🎁', href: '/order/giftcard' },
             { title: 'Déblocage téléphone', desc: 'iPhone, Samsung, Huawei — Code officiel', price: 'dès 12,99 €', hot: false, icon: '🔓', href: '/order?type=unlock' },
           ].map(s => (
@@ -258,7 +258,7 @@ export default function HomePage() {
       <footer style={{ borderTop: '1px solid #1a1a1a', padding: '40px 48px', textAlign: 'center' }}>
         <div style={{ fontSize: '18px', fontWeight: 800, marginBottom: '20px' }}>Unlock<span style={{ color: '#059669' }}>Pro</span></div>
         <div style={{ fontSize: '13px', color: '#444', display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '20px' }}>
-          {[['Recharges','/order?type=recharge'],['Gift Cards','/order/giftcard'],['Déblocage','/order?type=unlock'],['FAQ','/faq'],['Mentions legales','/mentions-legales'],['CGV','/cgv'],['Support','/support']].map(([label, href]) => (
+          {[['Recharges','/order/recharge'],['Gift Cards','/order/giftcard'],['Déblocage','/order?type=unlock'],['FAQ','/faq'],['Mentions legales','/mentions-legales'],['CGV','/cgv'],['Support','/support']].map(([label, href]) => (
             <Link key={label} href={href} style={{ color: 'inherit', textDecoration: 'none' }}>{label}</Link>
           ))}
         </div>
