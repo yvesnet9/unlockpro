@@ -43,7 +43,7 @@ export default function HomePage() {
         <div style={{ fontSize: '20px', fontWeight: 800 }}>Unlock<span style={{ color: '#059669' }}>Pro</span></div>
         <div style={{ display: 'flex', gap: '28px', fontSize: '13px' }}>
           <Link href="/order?type=recharge" style={{ color: '#059669', textDecoration: 'none', fontWeight: 700 }}>Recharges</Link>
-          <Link href="/order?type=giftcard" style={{ color: '#888', textDecoration: 'none' }}>Gift Cards</Link>
+          <Link href="/order/giftcard" style={{ color: '#888', textDecoration: 'none' }}>Gift Cards</Link>
           <Link href="/order?type=unlock" style={{ color: '#888', textDecoration: 'none' }}>Déblocage</Link>
           <Link href="/dashboard" style={{ color: '#888', textDecoration: 'none' }}>Mon compte</Link>
         </div>
@@ -130,7 +130,7 @@ export default function HomePage() {
             <div style={{ textAlign: 'center', padding: '20px 0' }}>
               <div style={{ fontSize: '32px', marginBottom: '12px' }}>🎁</div>
               <p style={{ color: '#666', fontSize: '14px', marginBottom: '16px' }}>Amazon, iTunes, Google Play et plus</p>
-              <Link href="/order?type=giftcard" style={{ display: 'block', background: '#059669', color: '#0a0a0a', padding: '14px', borderRadius: '10px', textAlign: 'center', fontWeight: 800, fontSize: '14px', textDecoration: 'none' }}>Voir les Gift Cards →</Link>
+              <Link href="/order/giftcard" style={{ display: 'block', background: '#059669', color: '#0a0a0a', padding: '14px', borderRadius: '10px', textAlign: 'center', fontWeight: 800, fontSize: '14px', textDecoration: 'none' }}>Voir les Gift Cards →</Link>
             </div>
           )}
           {activeTab === 'unlock' && (
@@ -165,7 +165,7 @@ export default function HomePage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
           {[
             { title: 'Recharge mobile', desc: 'MTN, Orange, Airtel, Moov, Vodacom...', price: '5 € – 50 €', hot: true, icon: '📱', href: '/order?type=recharge' },
-            { title: 'Gift Cards', desc: 'Amazon, iTunes, Google Play, Netflix...', price: '10 € – 100 €', hot: false, icon: '🎁', href: '/order?type=giftcard' },
+            { title: 'Gift Cards', desc: 'Amazon, iTunes, Google Play, Netflix...', price: '10 € – 100 €', hot: false, icon: '🎁', href: '/order/giftcard' },
             { title: 'Déblocage téléphone', desc: 'iPhone, Samsung, Huawei — Code officiel', price: 'dès 12,99 €', hot: false, icon: '🔓', href: '/order?type=unlock' },
           ].map(s => (
             <Link key={s.title} href={s.href} style={{ textDecoration: 'none' }}>
@@ -258,7 +258,7 @@ export default function HomePage() {
       <footer style={{ borderTop: '1px solid #1a1a1a', padding: '40px 48px', textAlign: 'center' }}>
         <div style={{ fontSize: '18px', fontWeight: 800, marginBottom: '20px' }}>Unlock<span style={{ color: '#059669' }}>Pro</span></div>
         <div style={{ fontSize: '13px', color: '#444', display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '20px' }}>
-          {[['Recharges','/order?type=recharge'],['Gift Cards','/order?type=giftcard'],['Déblocage','/order?type=unlock'],['FAQ','/faq'],['Mentions legales','/mentions-legales'],['CGV','/cgv'],['Support','/support']].map(([label, href]) => (
+          {[['Recharges','/order?type=recharge'],['Gift Cards','/order/giftcard'],['Déblocage','/order?type=unlock'],['FAQ','/faq'],['Mentions legales','/mentions-legales'],['CGV','/cgv'],['Support','/support']].map(([label, href]) => (
             <Link key={label} href={href} style={{ color: 'inherit', textDecoration: 'none' }}>{label}</Link>
           ))}
         </div>
