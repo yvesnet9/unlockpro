@@ -24,7 +24,41 @@ export async function POST(req: NextRequest) {
 
   const session = event.data.object as Stripe.Checkout.Session
   const orderId = session.metadata?.orderId
+  const orderType = session.metadata?.type
   if (!orderId) return NextResponse.json({ received: true })
+
+  // Recharge DT One
+  if (orderType === 'recharge') {
+    await query(
+      `UPDATE recharge_orders SET status = 'paid', stripe_pi = $1 WHERE id = $2`,
+      [session.payment_intent, orderId]
+    )
+    const recharge = await queryOne<any>(
+      `SELECT phone, product_id, amount_eur, operator_name FROM recharge_orders WHERE id = $1`,
+      [orderId]
+    )
+    if (!recharge) return NextResponse.json({ received: true })
+    try {
+      const { createTransaction, confirmTransaction } = await import('@/lib/dtone')
+      await query(`UPDATE recharge_orders SET status = 'processing' WHERE id = $1`, [orderId])
+      const tx = await createTransaction({
+        product_id: Number(recharge.product_id),
+        credit_party_mobile_number: recharge.phone,
+        auto_confirm: true,
+        external_id: orderId,
+      })
+      await query(
+        `UPDATE recharge_orders SET status = 'completed', dtone_transaction_id = $1 WHERE id = $2`,
+        [String(tx.id), orderId]
+      )
+    } catch (err: any) {
+      await query(
+        `UPDATE recharge_orders SET status = 'failed', error_msg = $1 WHERE id = $2`,
+        [err.message, orderId]
+      )
+    }
+    return NextResponse.json({ received: true })
+  }
 
   await query(
     `UPDATE orders SET status = 'paid', stripe_pi = $1 WHERE id = $2 AND status = 'pending'`,
